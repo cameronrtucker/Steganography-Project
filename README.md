@@ -1,4 +1,4 @@
-Stenography Project for Team Mangos
+Stenography Project for Team Mangos: 
 Cameron Tucker and Ella Self
 
 
