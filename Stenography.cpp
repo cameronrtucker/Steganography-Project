@@ -4,7 +4,7 @@
  * @date 2024-10-14
  * @brief stenography functions
  * 
- * steganography functions, comments
+ * stenography functions, comments
  */
 
 #include "Stenography.h"
@@ -13,7 +13,7 @@
 #include <string>
 #include <vector>
 
-
+// not sure how vectors fr work tbh so if you wanna comment this i would love that 
 vector<int> colorData;
 
 
@@ -24,10 +24,12 @@ vector<int> colorData;
  * @param int N 
  * @pre cipherChar and N exist
  * @return int n (nth bit of a char) 
- * @post 
+ * @post nth bit is found and returned 
  * 
  */
-int getNthBit(char cipherChar, int N);
+int getNthBit(char cipherChar, int N){
+  // 
+};
 
 
 /**
@@ -39,7 +41,12 @@ int getNthBit(char cipherChar, int N);
  * @post values from ppm image are stored
  * 
  */
-void readImage(string filename);
+void readImage(string fileName){
+  // ask for fileName? (check to make sure file exists) 
+  // open file with fileName
+  // reads file into an array through a loop until !file (?)
+  // file info is stored in an array? or is that what the vector is for
+};
 
 
 /**
@@ -48,10 +55,13 @@ void readImage(string filename);
  * @param string filename 
  * @pre file exists
  * @return void 
- * @post 
+ * @post the image is printed
  * 
  */
-void printImage(string filename);
+void printImage(string fileName){
+  // use filename to open file 
+  // writes the info from the member data (from an array?) to fileName
+};
 
 
 /**
@@ -63,7 +73,19 @@ void printImage(string filename);
  * @post 
  * 
  */
-void readCipherText(string filename);
+void readCipherText(string fileName);
+
+
+/**
+ * writes the plain text (ciphertext) to the file fileName
+ *
+ * @param string fileName 
+ * @pre file exists
+ * @return void 
+ * @post cipher text is in fileName
+ * 
+ */
+void printCipherText(string fileName); 
 
 
 /**
