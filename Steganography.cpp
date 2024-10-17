@@ -181,21 +181,22 @@ void Steganography::encipher(){
 
 void Steganography::decipher() {
   cipherText.clear();
-  char currentChar = 0;
+  unsigned char currentChar = 0; //to prevent negative values
   int bitIndex = 0;
 
   for (size_t i=0; i<colorData.size(); ++i) {
     int lsb = (colorData[i] & 1);
-    currentChar |= lsb << (bitIndex % 8); //extract lsb and shift left to build the character
+    currentChar |= (lsb << (7 - bitIndex)); //extract lsb and shift left to build the character
+    bitIndex++; // move to next bit index
+		    
     cout<<"Extracted LSB: " <<lsb<< "Current Char: "<<(int)currentChar<<endl; //DEBUG OUTPUT
     
-    if (++bitIndex %8 == 0) { //after 8 bits, form a character
-      if (currentChar == '\0'){ //termination character
-        break;
-    }
-      cipherText += currentChar; // add char to decoded text
-      cout<<"Formed Char: "<<currentChar<<endl; //DEBUG OUTPUT
+    if (bitIndex == 8) { //after 8 bits, form a character
+      cipherText += currentChar; //add character to cipherText
       currentChar = 0; //reset for next run
+      bitIndex = 0;
+      
+      cout<<"Formed Char: "<<currentChar<<" ("<< int(currentChar)<<") "<<endl; //DEBUG OUTPUT
     }
   }
 }
