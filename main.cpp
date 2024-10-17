@@ -34,7 +34,6 @@ int main() {
 
     cout<<"Enter output PPM file name: ";
     cin>>outputFile;
-    steg.cleanImage();
     steg.encipher();
     steg.printImage(outputFile);
 
