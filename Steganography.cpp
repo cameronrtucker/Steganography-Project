@@ -15,7 +15,7 @@
 
 using namespace std;
 
-// vector 
+// vector stores color data as flat ints
 vector<int> colorData;
 
 
@@ -185,10 +185,16 @@ void Steganography::decipher() {
   int bitIndex = 0;
 
   for (size_t i=0; i<colorData.size(); ++i) {
-    currentChar |= (colorData[i] & 1) << (bitIndex % 8); //extract lsb and shift left to build the character
-
+    int lsb = (colorData[i] & 1);
+    currentChar |= lsb << (bitIndex % 8); //extract lsb and shift left to build the character
+    cout<<"Extracted LSB: " <<lsb<< "Current Char: "<<(int)currentChar<<endl; //DEBUG OUTPUT
+    
     if (++bitIndex %8 == 0) { //after 8 bits, form a character
-      cipherText += currentChar;
+      if (currentChar == '\0'){ //termination character
+        break;
+    }
+      cipherText += currentChar; // add char to decoded text
+      cout<<"Formed Char: "<<currentChar<<endl; //DEBUG OUTPUT
       currentChar = 0; //reset for next run
     }
   }
