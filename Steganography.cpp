@@ -2,9 +2,9 @@
  * @file Steganography.cpp
  * @author Mangos : Cameron Tucker and Ella Self
  * @date 2024-10-14
- * @brief stenography functions
+ * @brief steganography functions
  * 
- * stenography functions, comments
+ * steganography functions, comments
  */
 
 #include "Steganography.h"
@@ -13,12 +13,14 @@
 #include <string>
 #include <vector>
 
-// not sure how vectors fr work tbh so if you wanna comment this i would love that 
+using namespace std;
+
+// vector 
 vector<int> colorData;
 
 
 /**
- * returns the nth bit from the character getting encoded 
+ * Returns the nth bit from the character getting encoded 
  *
  * @param char cipherChar 
  * @param int N 
@@ -27,9 +29,7 @@ vector<int> colorData;
  * @post nth bit is found and returned 
  * 
  */
-int getNthBit(char cipherChar, int N){
-  // 
-};
+int getNthBit(char cipherChar, int N);
 
 
 /**
@@ -41,13 +41,11 @@ int getNthBit(char cipherChar, int N){
  * @post values from ppm image are stored
  * 
  */
-void readImage(string fileName){
+void readImage(string fileName);
   // ask for fileName? (check to make sure file exists) 
   // open file with fileName
   // reads file into an array through a loop until !file (?)
   // file info is stored in an array? or is that what the vector is for
-};
-
 
 /**
  * writes the ppm image stored in member data to fileName
@@ -58,10 +56,9 @@ void readImage(string fileName){
  * @post the image is printed
  * 
  */
-void printImage(string fileName){
+void printImage(string fileName);
   // use filename to open file 
   // writes the info from the member data (from an array?) to fileName
-};
 
 
 /**
@@ -119,3 +116,80 @@ void encipher();
  * 
  */
 void decipher();
+
+int Steganography::getNthBit(char cipherChar, int n){
+  return(cipherChar >> n) & 1; //shifts bit n times to the right, masks with 1
+}
+
+void Steganography::readImage(string fileName) {
+  ifstream inputFile(fileName);
+
+  inputFile>>magicNumber>>width>>height>>maxColor;
+  colorData.resize(width*height*3); //RGB pixels have 3 color values
+
+  for (int& color : colorData) {
+    inputFile >> color;
+  }
+
+  inputFile.close();
+}
+
+void Steganography::printImage(string fileName) {
+  ofstream outputFile(fileName);
+  outputFile<<magicNumber<<"\n"<<width<<" "<<height<<"\n"<<maxColor<<"\n";
+
+  for (size_t i=0; i<colorData.size(); ++i){
+    outputFile<<colorData[i]<<" ";
+    if ((i + 1) % 3 == 0) {
+      outputFile <<"\n"; //should newline after RGB triplets
+    }
+  }
+  outputFile.close();
+}
+
+void Steganography::readCipherText(string fileName) {
+  ifstream inputFile(fileName);
+
+  getline(inputFile, cipherText, '\0'); //reads entire file
+  inputFile.close();
+}
+
+void Steganography::printCipherText(string fileName) {
+  ofstream outputFile(fileName);
+  outputFile<< cipherText;
+  outputFile.close();
+}
+
+void Steganography::cleanImage(){
+  for (int&color : colorData) {
+    color&= ~1; //zero out least significant bit
+  }
+}
+
+void Steganography::encipher(){
+  int bitIndex = 0; //tracks which bit of message being encoded
+  for (char c : cipherText) {
+    for (int i=0; i<8; ++i) { //each character has 8 bits
+      if (bitIndex < static_cast<int>(colorData.size())) {
+	colorData[bitIndex] |= getNthBit(c, i); //Set the LSB to the bit of the message
+	++bitIndex;
+      }
+    }
+  }
+}
+
+
+void Steganography::decipher() {
+  cipherText.clear();
+  char currentChar = 0;
+  int bitIndex = 0;
+
+  for (size_t i=0; i<colorData.size(); ++i) {
+    currentChar |= (colorData[i] & 1) << (bitIndex % 8); //extract lsb and shift left to build the character
+
+    if (++bitIndex %8 == 0) { //after 8 bits, form a character
+      cipherText += currentChar;
+      currentChar = 0; //reset for next run
+    }
+  }
+}
