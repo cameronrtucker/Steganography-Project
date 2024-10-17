@@ -15,7 +15,7 @@ steganography: Steganography.o main.o
 	$(CC) $(CFLAGS) -o $(TARGET) Steganography.o main.o
 
 Steganography.o: Steganography.cpp Steganography.h 
-	$(CC) $CFALGS) -c Steganography.cpp
+	$(CC) $(CFLAGS) -c Steganography.cpp
 
 main.o: main.cpp Steganography.h
 	$(CC) $(CFLAGS) -c main.cpp
