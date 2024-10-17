@@ -17,7 +17,7 @@ class Steganography {
 
  public:
   void readImage(string fileName); //reads ppm file and stores data
-  void PrintImage(string fileName); //writes image data to ppm file
+  void printImage(string fileName); //writes image data to ppm file
   void readCipherText(string fileName); // reads plain text of data to be hidden
   void printCipherText(string fileName); //writes decoded text 
   void cleanImage(); //zeroes out least significant bits of color value
