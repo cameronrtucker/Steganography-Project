@@ -1,8 +1,10 @@
 #ifndef STEGANOGRAPHY_H
-#define STEGANOGARPHY_H
+#define STEGANOGRAPHY_H
 
 #include <string>
 #include <vector>
+
+using namespace std;
 
 class Steganography {
 
