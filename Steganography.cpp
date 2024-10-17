@@ -156,26 +156,28 @@ void Steganography::readCipherText(string fileName) {
 
 void Steganography::printCipherText(string fileName) {
   ofstream outputFile(fileName);
-  outputFile<< cipherText;
+  outputFile<< cipherText; //added debug here before, works correctly 
   outputFile.close();
 }
 
 void Steganography::cleanImage(){
-  for (int&color : colorData) {
-    color&= ~1; //zero out least significant bit
+  for (size_t i = 0; i < colorData.size(); ++i) {
+    colorData[i] &= ~1; //zero out least significant bit
   }
 }
 
 void Steganography::encipher(){
   cleanImage(); //clear lsbs before encoding
-  size_t textLength = cipherText.length(); //get text length
   size_t colorDataSize = colorData.size();
+  size_t textLength = cipherText.length(); //get text length
 
-  for (size_t i = 0; i <textLength; ++i) {
+  for (size_t i = 0; i <textLength && i * 8 < colorDataSize; ++i) {
     char currentChar = cipherText[i]; //get current char to encode
+    cout<<"Encoding character: " <<currentChar<<" (ASCII: " <<(int)currentChar<<")\n"; //DEBUG OUTPUT
+    
     for (int bitIndex=0; bitIndex < 8; ++bitIndex) {
       int lsb = (currentChar >> (7 - bitIndex)) & 1; //gets bit 1 or 0
-      
+      cout<<"Bit "<<(7 - bitIndex) << ": "<<lsb<<"\n"; //DEBUG OUTPUT
     colorData[i * 8 + bitIndex] = (colorData[i * 8 + bitIndex] & ~1) | lsb;
     }
   }
@@ -191,15 +193,11 @@ void Steganography::decipher() {
     int lsb = (colorData[i] & 1);
     currentChar |= (lsb << (7 - bitIndex)); //extract lsb and shift left to build the character
     bitIndex++; // move to next bit index
-		    
-    cout<<"Extracted LSB: " <<lsb<< "Current Char: "<<(int)currentChar<<endl; //DEBUG OUTPUT
-    
+		       
     if (bitIndex == 8) { //after 8 bits, form a character
       cipherText += currentChar; //add character to cipherText
       currentChar = 0; //reset for next run
       bitIndex = 0;
-      
-      cout<<"Formed Char: "<<currentChar<<" ("<< int(currentChar)<<") "<<endl; //DEBUG OUTPUT
     }
   }
 }
