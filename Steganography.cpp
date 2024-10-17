@@ -2,9 +2,9 @@
  * @file Steganography.cpp
  * @author Mangos : Cameron Tucker and Ella Self
  * @date 2024-10-14
- * @brief stenography functions
+ * @brief steganography functions
  * 
- * stenography functions, comments
+ * steganography functions, comments
  */
 
 #include "Steganography.h"
@@ -13,12 +13,14 @@
 #include <string>
 #include <vector>
 
-// not sure how vectors fr work tbh so if you wanna comment this i would love that 
+using namespace std;
+
+// vector stores color data as flat ints
 vector<int> colorData;
 
 
 /**
- * returns the nth bit from the character getting encoded 
+ * Returns the nth bit from the character getting encoded 
  *
  * @param char cipherChar 
  * @param int N 
@@ -27,9 +29,7 @@ vector<int> colorData;
  * @post nth bit is found and returned 
  * 
  */
-int getNthBit(char cipherChar, int N){
-  // 
-};
+int getNthBit(char cipherChar, int N);
 
 
 /**
@@ -41,13 +41,11 @@ int getNthBit(char cipherChar, int N){
  * @post values from ppm image are stored
  * 
  */
-void readImage(string fileName){
+void readImage(string fileName);
   // ask for fileName? (check to make sure file exists) 
   // open file with fileName
   // reads file into an array through a loop until !file (?)
   // file info is stored in an array? or is that what the vector is for
-};
-
 
 /**
  * writes the ppm image stored in member data to fileName
@@ -58,10 +56,9 @@ void readImage(string fileName){
  * @post the image is printed
  * 
  */
-void printImage(string fileName){
+void printImage(string fileName);
   // use filename to open file 
   // writes the info from the member data (from an array?) to fileName
-};
 
 
 /**
@@ -119,3 +116,92 @@ void encipher();
  * 
  */
 void decipher();
+
+int Steganography::getNthBit(char cipherChar, int n){
+  return(cipherChar >> n) & 1; //shifts bit n times to the right, masks with 1
+}
+
+void Steganography::readImage(string fileName) {
+  ifstream inputFile(fileName);
+
+  inputFile>>magicNumber>>width>>height>>maxColor;
+  colorData.resize(width*height*3); //RGB pixels have 3 color values
+
+  for (int& color : colorData) {
+    inputFile >> color;
+  }
+
+  inputFile.close();
+}
+
+void Steganography::printImage(string fileName) {
+  ofstream outputFile(fileName);
+  outputFile<<magicNumber<<"\n"<<width<<" "<<height<<"\n"<<maxColor<<"\n";
+
+  for (size_t i=0; i<colorData.size(); ++i){
+    outputFile<<colorData[i]<<" ";
+    if ((i + 1) % 3 == 0) {
+      outputFile <<"\n"; //should newline after RGB triplets
+    }
+  }
+  outputFile.close();
+}
+
+void Steganography::readCipherText(string fileName) {
+  ifstream inputFile(fileName);
+
+  getline(inputFile, cipherText, '\0'); //reads entire file
+  inputFile.close();
+}
+
+void Steganography::printCipherText(string fileName) {
+  ofstream outputFile(fileName);
+  outputFile<< cipherText; //added debug here before, works correctly 
+  outputFile.close();
+}
+
+void Steganography::cleanImage(){
+  for (size_t i = 0; i < colorData.size(); ++i) {
+    colorData[i] &= ~1; //zero out least significant bit
+  }
+}
+
+void Steganography::encipher(){
+  cleanImage(); //clear lsbs before encoding
+  size_t colorDataSize = colorData.size();
+  size_t textLength = cipherText.length(); //get text length
+
+  for (size_t i = 0; i <textLength && i * 8 < colorDataSize; ++i) {
+    char currentChar = cipherText[i]; //get current char to encode
+    cout<<"Encoding character: " <<currentChar<<" (ASCII: " <<(int)currentChar<<")\n"; //DEBUG OUTPUT
+    
+    for (int bitIndex=0; bitIndex < 8; ++bitIndex) {
+      int lsb = (currentChar >> (7 - bitIndex)) & 1; //gets bit 1 or 0
+      cout<<"Bit "<<(7 - bitIndex) << ": "<<lsb<<"\n"; //DEBUG OUTPUT
+      if ( i * 8 + bitIndex < colorDataSize) {
+    colorData[i * 8 + bitIndex] = (colorData[i * 8 + bitIndex] & ~1) | lsb;
+      }
+    }
+  }
+}
+
+
+void Steganography::decipher() {
+  cipherText.clear();
+  unsigned char currentChar = 0; //to prevent negative values
+  int bitIndex = 0;
+
+  for (size_t i=0; i<colorData.size(); ++i) {
+    int lsb = (colorData[i] & 1);
+    currentChar |= (lsb << (7 - bitIndex)); //extract lsb and shift left to build the character
+    bitIndex++; // move to next bit index
+		       
+    if (bitIndex == 8) { //after 8 bits, form a character
+      if (currentChar == '\0') {
+	break;} //breaks decode at delimiter.. prevents junk printing
+      cipherText += currentChar; //add character to cipherText
+      currentChar = 0; //reset for next run
+      bitIndex = 0;
+    }
+  }
+}
