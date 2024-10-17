@@ -167,13 +167,16 @@ void Steganography::cleanImage(){
 }
 
 void Steganography::encipher(){
-  int bitIndex = 0; //tracks which bit of message being encoded
-  for (char c : cipherText) {
-    for (int i=0; i<8; ++i) { //each character has 8 bits
-      if (bitIndex < static_cast<int>(colorData.size())) {
-	colorData[bitIndex] |= getNthBit(c, i); //Set the LSB to the bit of the message
-	++bitIndex;
-      }
+  cleanImage(); //clear lsbs before encoding
+  size_t textLength = cipherText.length(); //get text length
+  size_t colorDataSize = colorData.size();
+
+  for (size_t i = 0; i <textLength; ++i) {
+    char currentChar = cipherText[i]; //get current char to encode
+    for (int bitIndex=0; bitIndex < 8; ++bitIndex) {
+      int lsb = (currentChar >> (7 - bitIndex)) & 1; //gets bit 1 or 0
+      
+    colorData[i * 8 + bitIndex] = (colorData[i * 8 + bitIndex] & ~1) | lsb;
     }
   }
 }
