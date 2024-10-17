@@ -178,7 +178,9 @@ void Steganography::encipher(){
     for (int bitIndex=0; bitIndex < 8; ++bitIndex) {
       int lsb = (currentChar >> (7 - bitIndex)) & 1; //gets bit 1 or 0
       cout<<"Bit "<<(7 - bitIndex) << ": "<<lsb<<"\n"; //DEBUG OUTPUT
+      if ( i * 8 + bitIndex < colorDataSize) {
     colorData[i * 8 + bitIndex] = (colorData[i * 8 + bitIndex] & ~1) | lsb;
+      }
     }
   }
 }
@@ -195,6 +197,8 @@ void Steganography::decipher() {
     bitIndex++; // move to next bit index
 		       
     if (bitIndex == 8) { //after 8 bits, form a character
+      if (currentChar == '\0') {
+	break;} //breaks decode at delimiter.. prevents junk printing
       cipherText += currentChar; //add character to cipherText
       currentChar = 0; //reset for next run
       bitIndex = 0;
