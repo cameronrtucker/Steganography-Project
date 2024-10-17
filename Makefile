@@ -9,9 +9,9 @@ CC = g++
 TARGET = steganography
 CFLAGS = -g -Wall -Wextra
 
-default = $(TARGET)
+all: $(TARGET)
 
-steganography: Steganography.o main.o
+$(TARGET): Steganography.o main.o
 	$(CC) $(CFLAGS) -o $(TARGET) Steganography.o main.o
 
 Steganography.o: Steganography.cpp Steganography.h 
@@ -21,4 +21,4 @@ main.o: main.cpp Steganography.h
 	$(CC) $(CFLAGS) -c main.cpp
 
 clean:
-	$(RM) $(TARGET) *.o *~
+	rm -f $(TARGET) *.o *~
