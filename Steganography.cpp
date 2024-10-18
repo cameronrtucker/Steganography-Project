@@ -1,6 +1,6 @@
 /**
  * @file Steganography.cpp
-0;10;1c * @author Mangos : Cameron Tucker and Ella Self
+ * @author Mangos : Cameron Tucker and Ella Self
  * @date 2024-10-14
  * @brief steganography functions
  * 
