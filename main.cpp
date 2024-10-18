@@ -24,31 +24,31 @@ int main() {
   cin >> choice;
 
   if (choice == 1) {
-    cout<<"Enter input PPM file name: ";
-    cin>>ppmFile;
+    cout << "Enter input PPM file name: ";
+    cin >> ppmFile;
     steg.readImage(ppmFile);
 
     cout<<"Enter input text file name: ";
-    cin>>textFile;
+    cin >> textFile;
     steg.readCipherText(textFile);
 
     cout<<"Enter output PPM file name: ";
-    cin>>outputFile;
+    cin >> outputFile;
     steg.encipher();
     steg.printImage(outputFile);
 
   } else if (choice == 2) {
-    cout<<"Enter input PPM file name: ";
-    cin>>ppmFile;
+    cout << "Enter input PPM file name: ";
+    cin >> ppmFile;
     steg.readImage(ppmFile);
 
     cout<<"Enter output text file name: ";
-    cin>>outputFile;
+    cin >> outputFile;
     steg.decipher();
     steg.printCipherText(outputFile);
 
   } else if (choice != 1 || choice != 2){
-    cout << "Please choose an operation from the list. \n1. Encode \n2. Decode \n" ;
+    cout << "Please choose an operation from the list. \n" ;
   }
 
     return 0;
