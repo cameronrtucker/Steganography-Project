@@ -157,11 +157,9 @@ void Steganography::encipher(){
 
   for (size_t i = 0; i < textLength && i * 8 < colorDataSize; ++i) {
     char currentChar = cipherText[i]; //get current char to encode
-    cout << "Encoding character: " << currentChar << " (ASCII: " << (int)currentChar<< ")\n"; //DEBUG OUTPUT
     
     for (int bitIndex=0; bitIndex < 8; ++bitIndex) {
       int lsb = (currentChar >> (7 - bitIndex)) & 1; //gets bit 1 or 0
-      cout << "Bit " << (7 - bitIndex) << ": " << lsb << "\n"; //DEBUG OUTPUT
 
       if ( i * 8 + bitIndex < colorDataSize) {
 	colorData[i * 8 + bitIndex] = (colorData[i * 8 + bitIndex] & ~1) | lsb;
