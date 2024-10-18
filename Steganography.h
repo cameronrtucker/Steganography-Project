@@ -1,3 +1,12 @@
+/**
+ * @file Steganography.h
+ * @author Mangos: Cameron Tucker and Ella Self
+ * @date 2024-10-14
+ * @brief Steganography header file
+ * 
+ * declares functions and variables to be used
+ */
+
 #ifndef STEGANOGRAPHY_H
 #define STEGANOGRAPHY_H
 

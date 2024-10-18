@@ -46,6 +46,10 @@ int main() {
     cin>>outputFile;
     steg.decipher();
     steg.printCipherText(outputFile);
+
+  } else if (choice != 1 || choice != 2){
+    cout << "Please choose an operation from the list. \n1. Encode \n2. Decode \n" ;
   }
-  return 0;
+
+    return 0;
 }
