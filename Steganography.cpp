@@ -118,6 +118,10 @@ void Steganography::readCipherText(string fileName) {
  */
 void Steganography::printCipherText(string fileName) {
   ofstream outputFile(fileName);
+  if (!outputFile.is_open()) {
+    cout << "Please provide a valid file. \n";
+  }
+  
   outputFile << cipherText; //added debug here before, works correctly 
   outputFile.close();
 }
